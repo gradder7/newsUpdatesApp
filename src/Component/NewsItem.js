@@ -7,7 +7,7 @@ export default class NewsItem extends Component {
     // let { title, description } = this.props;
     return (
       <div className="my-3">
-        <div className="card" style={{ width: "18rem" }}>
+        <div className="card">
           <img
             src={
               this.props.imgUrl
@@ -20,7 +20,13 @@ export default class NewsItem extends Component {
           <div className="card-body">
             <h5 className="card-title">{this.props.title}...</h5>
             <p className="card-text">{this.props.description}...</p>
-            {/* to open a link in new tab */}
+            <p className="card-text">
+              <small className="text-muted">
+                By {this.props.author ? this.props.author : "Unknown"} on{" "}
+                {new Date(this.props.date).toUTCString()}
+              </small>{" "}
+            </p>
+            {/* to open a link in new tab use taget="_blank"*/}
             <a
               rel="noreferrer"
               href={this.props.newsUrl}
@@ -31,7 +37,6 @@ export default class NewsItem extends Component {
             </a>
           </div>
         </div>
-        
       </div>
     );
   }

@@ -60,11 +60,13 @@ export default class News extends Component {
   static defaultProps = {
     country: "in",
     pageSize: 10,
+    category: "general",
   };
 
   static propTypes = {
     country: PropTypes.string,
     page: PropTypes.number,
+    category: PropTypes.string,
   };
 
   constructor() {
@@ -81,7 +83,7 @@ export default class News extends Component {
   async componentDidMount() {
     console.log("cdm");
     // take pagesize as props
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=business&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=1&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=1&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parseData = await data.json();
@@ -98,7 +100,9 @@ export default class News extends Component {
     } else {
       let url = ` https://newsapi.org/v2/top-headlines?country=${
         this.props.country
-      }&category=business&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=${
+      }&category=${
+        this.props.category
+      }&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=${
         this.state.page + 1
       }&pageSize=${this.props.pageSize}`;
       this.setState({ loading: true });
@@ -115,7 +119,9 @@ export default class News extends Component {
     console.log("prev");
     let url = ` https://newsapi.org/v2/top-headlines?country=${
       this.props.country
-    }&category=business&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=${
+    }&category=${
+      this.props.category
+    }&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=${
       this.state.page - 1
     }&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
@@ -151,6 +157,8 @@ export default class News extends Component {
                     }
                     imgUrl={element.urlToImage}
                     newsUrl={element.url}
+                    author={element.author}
+                    date={element.publishedAt}
                   />
                 </div>
               );
