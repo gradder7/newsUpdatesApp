@@ -81,15 +81,20 @@ export default class News extends Component {
   }
 
   async updateNews() {
+    // setting progess bar
+    this.props.setProgress(10);
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a81ba8559bb64acf8b5a8bb9e925ffc6&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
+    this.props.setProgress(50);
     let parseData = await data.json();
+    this.props.setProgress(70);
     this.setState({
       article: parseData.articles,
       totalArticles: parseData.totalResults,
       loading: false,
     });
+    this.props.setProgress(100);
   }
 
   async componentDidMount() {
@@ -163,10 +168,16 @@ export default class News extends Component {
     });
   };
 
+  capitalize = (word) => {
+    const lower = word.toLowerCase();
+    return lower.charAt(0).toUpperCase() + lower.slice(1);
+  };
+
   render() {
     return (
       <>
-        <h1 className="text-center my-5">News Updates : Top Head Lines</h1>
+        <h1 className="text-center mt-5">News Updates : Top Head Lines</h1>
+        <h2 className="text-center mb-5">{this.capitalize(this.props.category)}</h2>
         {/* if it is true than show spinner */}
         {this.state.loading && <Spinner />}
 

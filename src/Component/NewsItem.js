@@ -8,12 +8,18 @@ export default class NewsItem extends Component {
     return (
       <div className="my-3">
         <div className="card">
-          <span
-            className={`position-absolute top-0 translate-middle badge rounded-pill bg-danger`}
-            style={{ left: "90%", zIndex: "1" }}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              position: "absolute",
+              right: "0",
+            }}
           >
-            {this.props.source}
-          </span>
+            <span className={`badge rounded-pill bg-danger`}>
+              {this.props.source}
+            </span>
+          </div>
           <img
             src={
               this.props.imgUrl
@@ -37,7 +43,7 @@ export default class NewsItem extends Component {
               rel="noreferrer"
               href={this.props.newsUrl}
               target="_blank"
-              className="btn btn-sm btn-primary"
+              className="btn btn-sm btn-dark"
             >
               Read More
             </a>
