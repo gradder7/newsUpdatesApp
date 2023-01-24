@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default class News extends Component {
   // articles = [
@@ -71,19 +72,16 @@ export default class News extends Component {
 
   constructor() {
     super();
-    console.log("hello i am a constructor from news component");
     this.state = {
       article: [],
       loading: false,
       page: 1,
-      // totalArticles: 0
+      totalArticles: 0,
     };
   }
 
-  async componentDidMount() {
-    console.log("cdm");
-    // take pagesize as props
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=1&pageSize=${this.props.pageSize}`;
+  async updateNews() {
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a81ba8559bb64acf8b5a8bb9e925ffc6&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parseData = await data.json();
@@ -94,77 +92,126 @@ export default class News extends Component {
     });
   }
 
+  async componentDidMount() {
+    this.updateNews();
+  }
+
   handleNextPage = async () => {
-    // it will give me how many pages are there
-    if (this.state.page + 1 > Math.ceil(this.state.totalArticles / 21)) {
-    } else {
-      let url = ` https://newsapi.org/v2/top-headlines?country=${
-        this.props.country
-      }&category=${
-        this.props.category
-      }&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=${
-        this.state.page + 1
-      }&pageSize=${this.props.pageSize}`;
-      this.setState({ loading: true });
-      let data = await fetch(url);
-      let parseData = await data.json();
-      this.setState({
-        page: this.state.page + 1,
-        article: parseData.articles,
-        loading: false,
-      });
-    }
+    // if (this.state.page + 1 > Math.ceil(this.state.totalArticles / 21)) {
+    // } else {
+    // here i am doing +1 first
+    //   let url = ` https://newsapi.org/v2/top-headlines?country=${
+    //     this.props.country
+    //   }&category=${
+    //     this.props.category
+    //   }&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=${
+    //     this.state.page + 1
+    //   }&pageSize=${this.props.pageSize}`;
+    //   this.setState({ loading: true });
+    //   let data = await fetch(url);
+    //   let parseData = await data.json();
+    //   this.setState({
+    //     page: this.state.page + 1,
+    //     article: parseData.articles,
+    //     loading: false,
+    //   });
+    //
+    this.setState({
+      page: this.state.page + 1,
+    });
+    this.updateNews();
   };
+
   handlePrevPage = async () => {
-    console.log("prev");
-    let url = ` https://newsapi.org/v2/top-headlines?country=${
+    // console.log("prev");
+    // let url = ` https://newsapi.org/v2/top-headlines?country=${
+    //   this.props.country
+    // }&category=${
+    //   this.props.category
+    // }&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=${
+    //   this.state.page - 1
+    // }&pageSize=${this.props.pageSize}`;
+    // this.setState({ loading: true });
+    // let data = await fetch(url);
+    // let parseData = await data.json();
+    // this.setState({
+    //   page: this.state.page - 1,
+    //   article: parseData.articles,
+    //   loading: false,
+    // });
+    this.setState({
+      page: this.state.page - 1,
+    });
+    this.updateNews();
+  };
+
+  fetchMoreData = async () => {
+    this.setState({ page: this.state.page + 1 });
+    // for loader issue continue loading to solve  do this.state.page+1 in url
+    let url = `https://newsapi.org/v2/top-headlines?country=${
       this.props.country
     }&category=${
       this.props.category
-    }&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=${
-      this.state.page - 1
+    }&apiKey=a81ba8559bb64acf8b5a8bb9e925ffc6&page=${
+      this.state.page + 1
     }&pageSize=${this.props.pageSize}`;
-    this.setState({ loading: true });
     let data = await fetch(url);
     let parseData = await data.json();
     this.setState({
-      page: this.state.page - 1,
-      article: parseData.articles,
-      loading: false,
+      article: this.state.article.concat(parseData.articles),
+      totalArticles: parseData.totalResults,
     });
   };
+
   render() {
-    console.log("render");
     return (
-      <div className="container my-5">
-        <h1 className="text-center">News Updates : Top Head Lines</h1>
+      <>
+        <h1 className="text-center my-5">News Updates : Top Head Lines</h1>
         {/* if it is true than show spinner */}
         {this.state.loading && <Spinner />}
-        <div className="row">
-          {/* if loading than dont show content */}
-          {!this.state.loading &&
-            this.state.article.map((element) => {
-              return (
-                <div className="col-md-4" key={element.url}>
-                  <NewsItem
-                    title={element.title ? element.title.slice(0, 45) : <></>}
-                    description={
-                      element.description ? (
-                        element.description.slice(0, 90)
-                      ) : (
-                        <></>
-                      )
-                    }
-                    imgUrl={element.urlToImage}
-                    newsUrl={element.url}
-                    author={element.author}
-                    date={element.publishedAt}
-                  />
-                </div>
-              );
-            })}
-        </div>
-        <div className="container d-flex justify-content-between">
+
+        {/* ====== */}
+        {/*   {/* loader with the infinite scroll indtalled component */}
+        <InfiniteScroll
+          dataLength={this.state.article.length}
+          next={this.fetchMoreData}
+          hasMore={this.state.article.length !== this.state.totalArticles}
+          loader={<Spinner />}
+        >
+          <div className="container">
+            <div className="row">
+              {/* if loading than dont show content */}
+              {/* previously for loader with next and prev button and fetch */}
+              {/* {!this.state.loading &&
+            this.state.article.map((element) => { */}
+              {/* ========= */}
+              {this.state.article.map((element, index) => {
+                return (
+                  <div className="col-md-4" key={"Key" + index}>
+                    <NewsItem
+                      title={element.title ? element.title.slice(0, 45) : <></>}
+                      description={
+                        element.description ? (
+                          element.description.slice(0, 90)
+                        ) : (
+                          <></>
+                        )
+                      }
+                      imgUrl={element.urlToImage}
+                      newsUrl={element.url}
+                      author={element.author}
+                      date={element.publishedAt}
+                      source={element.source.name}
+                      // colorSource={this.props.category}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </InfiniteScroll>
+        {/* buttons */}
+        {/* <div className="container d-flex justify-content-between">
           <button
             disabled={this.state.page <= 1}
             type="button"
@@ -183,8 +230,8 @@ export default class News extends Component {
           >
             Next
           </button>
-        </div>
-      </div>
+        </div> */}
+      </>
     );
   }
 }

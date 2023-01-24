@@ -8,6 +8,12 @@ export default class NewsItem extends Component {
     return (
       <div className="my-3">
         <div className="card">
+          <span
+            className={`position-absolute top-0 translate-middle badge rounded-pill bg-danger`}
+            style={{ left: "90%", zIndex: "1" }}
+          >
+            {this.props.source}
+          </span>
           <img
             src={
               this.props.imgUrl
@@ -18,11 +24,11 @@ export default class NewsItem extends Component {
             alt="..."
           />
           <div className="card-body">
-            <h5 className="card-title">{this.props.title}...</h5>
+            <h5 className="card-title">{this.props.title}... </h5>
             <p className="card-text">{this.props.description}...</p>
             <p className="card-text">
               <small className="text-muted">
-                By {this.props.author ? this.props.author : "Unknown"} on{" "}
+                By {this.props.author ? this.props.author : "Unknown"} on
                 {new Date(this.props.date).toUTCString()}
               </small>{" "}
             </p>
