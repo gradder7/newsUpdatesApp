@@ -213,7 +213,7 @@ export default class News extends Component {
                       author={element.author}
                       date={element.publishedAt}
                       source={element.source.name}
-                      // colorSource={this.props.category}
+                      colorSource={this.props.category}
                     />
                   </div>
                 );

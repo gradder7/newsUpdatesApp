@@ -14,7 +14,20 @@ export default class App extends Component {
       progress: progress,
     });
   };
+
+  // category = {
+  //   general: {
+  //     name: "general",
+  //     color: "success",
+  //   },
+  //   business: {
+  //     name: "business",
+  //     color: "danger",
+  //   },
+  // };
+
   render() {
+    // console.log(this.category.general.name)
     return (
       <>
         <Router>

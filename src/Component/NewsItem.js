@@ -1,10 +1,20 @@
 import React, { Component } from "react";
+import classNames from "classnames";
 
 export default class NewsItem extends Component {
   render() {
     //we can also take props like this in object
     //usinf destructuring
     // let { title, description } = this.props;
+    const classnames = classNames({
+      warning: this.props.colorSource === "business",
+      success: this.props.colorSource === "entertainment",
+      danger: this.props.colorSource === "general",
+      info: this.props.colorSource === "health",
+      secondary: this.props.colorSource === "science",
+      dark: this.props.colorSource === "sports",
+      primary: this.props.colorSource === "technology",
+    });
     return (
       <div className="my-3">
         <div className="card">
@@ -16,7 +26,7 @@ export default class NewsItem extends Component {
               right: "0",
             }}
           >
-            <span className={`badge rounded-pill bg-danger`}>
+            <span className={`badge rounded-pill bg-${classnames}`}>
               {this.props.source}
             </span>
           </div>
