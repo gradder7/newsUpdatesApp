@@ -83,7 +83,7 @@ export default class News extends Component {
   async updateNews() {
     // setting progess bar
     this.props.setProgress(10);
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a81ba8559bb64acf8b5a8bb9e925ffc6&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     this.props.setProgress(50);
@@ -157,7 +157,7 @@ export default class News extends Component {
       this.props.country
     }&category=${
       this.props.category
-    }&apiKey=a81ba8559bb64acf8b5a8bb9e925ffc6&page=${
+    }&apiKey=ae73228cd8a04eb194ee898b2eb0d7fb&page=${
       this.state.page + 1
     }&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
@@ -177,7 +177,9 @@ export default class News extends Component {
     return (
       <>
         <h1 className="text-center mt-5">News Updates : Top Head Lines</h1>
-        <h2 className="text-center mb-5">{this.capitalize(this.props.category)}</h2>
+        <h2 className="text-center mb-5">
+          {this.capitalize(this.props.category)}
+        </h2>
         {/* if it is true than show spinner */}
         {this.state.loading && <Spinner />}
 
